@@ -3,10 +3,10 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = "fluent-plugin-papertrail"
-  spec.version       = "0.2.8"
-  spec.authors       = ["Jonathan Lozinski", "Alex Ouzounis", "Chris Rust", "Chris Erway"]
-  spec.email         = ["jonathan.lozinski@solarwinds.com", "alex.ouzounis@solarwinds.com", "chris.rust@solarwinds.com", "chris.erway@solarwinds.com"]
+  spec.name          = "fluent-plugin-papertrail-urlbox"
+  spec.version       = "0.2.9"
+  spec.authors       = ["Jonathan Lozinski", "Alex Ouzounis", "Chris Rust", "Chris Erway","Chris Roebuck"]
+  spec.email         = ["jonathan.lozinski@solarwinds.com", "alex.ouzounis@solarwinds.com", "chris.rust@solarwinds.com", "chris.erway@solarwinds.com", "chris@urlbox.io"]
 
   spec.summary       = %q{Remote Syslog Output Fluentd plugin for papertrail}
   spec.description   = %q{Remote Syslog Output Fluentd plugin for papertrail}
