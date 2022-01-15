@@ -14,6 +14,7 @@ module Fluent
     config_param :flush_interval, :time, default: 1
     config_param :discard_unannotated_pod_logs, :bool, default: false
     config_param :maximum_syslog_packet_size, :integer, default: 99990
+    config_param :fallback_severity, :string, default: 'info'
 
     # register as 'papertrail' fluent plugin
     Fluent::Plugin.register_output('papertrail', self)
@@ -29,6 +30,7 @@ module Fluent
       @sockets[socket_key] = create_socket(socket_key)
       # redefine default hostname if it's been passed in through ENV
       @default_hostname = ENV['FLUENT_HOSTNAME'] || @default_hostname
+      @fallback_severity = ENV['FLUENT_FALLBACK_SEVERITY'] || @fallback_severity
     end
 
     def format(tag, time, record)
@@ -79,7 +81,11 @@ module Fluent
       packet = SyslogProtocol::Packet.new
       packet.hostname = record['hostname'] || @default_hostname
       packet.facility = record['facility'] || 'local0'
-      packet.severity = record['severity'] || 'info'
+      begin
+        packet.severity = record['severity'] || 'info'
+      rescue ArgumentError
+        packet.severity = @fallback_severity
+      end
       packet.tag      = record['program'] || tag
       packet.content  = record['message'] || record['log']
       packet.time     = time ? Time.at(time) : Time.now

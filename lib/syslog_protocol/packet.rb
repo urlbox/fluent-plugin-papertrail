@@ -66,7 +66,7 @@ module SyslogProtocol
           raise ArgumentError.new "Severity must be within 0-7"
         end
       elsif s.is_a? String
-        if severity = SEVERITIES[s]
+        if severity = SEVERITIES[s.downcase]
           @severity = severity
         else
           raise ArgumentError.new "'#{s}' is not a designated severity"
