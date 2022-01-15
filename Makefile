@@ -1,4 +1,4 @@
-REPO_NAME=fluent-plugin-papertrail
+REPO_NAME=fluent-plugin-papertrail-urlbox
 
 bundle:
 	bundle install
