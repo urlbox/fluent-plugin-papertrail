@@ -109,11 +109,11 @@ class Fluent::PapertrailTest < Test::Unit::TestCase
     assert packet.severity.to_s.eql? '6'
   end
   
-  def test_create_packet_with_non_systemd_severity_env_override
-    ENV['FLUENT_FALLBACK_SEVERITY'] = 'warn'
+  def test_create_packet_with_non_systemd_severity_config
     @driver.configure("
       papertrail_host #{@mock_host}
       papertrail_port #{@mock_port}
+      fallback_severity err
       ")
     non_systemd_severity_record = {
       'hostname' => 'some_hostname',
@@ -123,6 +123,25 @@ class Fluent::PapertrailTest < Test::Unit::TestCase
       'message' => 'some_message'
     }
     packet = @driver.instance.create_packet(nil, nil, non_systemd_severity_record)
+    assert packet.severity.to_s.eql? '3'
+  end
+  
+  def test_create_packet_with_non_systemd_severity_env_override
+    ENV['FLUENT_FALLBACK_SEVERITY'] = 'warn'
+    @driver.configure("
+      papertrail_host #{@mock_host}
+      papertrail_port #{@mock_port}
+      fallback_severity err
+      ")
+    non_systemd_severity_record = {
+      'hostname' => 'some_hostname',
+      'facility' => 'local0',
+      'severity' => 'SOMESEVERITY',
+      'program'  => 'pt',
+      'message' => 'some_message'
+    }
+    packet = @driver.instance.create_packet(nil, nil, non_systemd_severity_record)
+    puts 'sev:' + packet.severity.to_s
     assert packet.severity.to_s.eql? '4'
   end
 
